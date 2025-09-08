@@ -7,7 +7,7 @@ const User = require('./model/user.model')
 const connectDB = require('./config/db');
 require('dotenv').config();
 
-//const authRoutes = require('./routes/authRoutes.routes')
+const authRoutes = require('./routes/authRoutes');
 
 const PORT = process.env.PORT
 
@@ -35,7 +35,7 @@ let checkLogin = (req,res,next) => {
   }
 }
 
-//app.use('/', authRoutes)
+app.use('/', authRoutes);
 // Routes
 app.get('/', checkLogin, (req, res) => {
   res.render('home1', { 

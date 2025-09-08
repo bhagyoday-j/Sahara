@@ -45,6 +45,9 @@ app.get('/', checkLogin, (req, res) => {
   });
 });
 
+app.get('/skills_connect',checkLogin, (req, res) => {
+  res.render('skills');
+});
 
 app.get('/profile',checkLogin, (req, res) => {
   res.send(`<h1>Profile Page</h1>

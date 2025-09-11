@@ -12,6 +12,10 @@ let checkLogin = (req, res, next) => {
   }
 };
 
+router.get('/home', (req, res) => {
+  res.render('home0');
+});
+
 // Routes
 router.get('/', checkLogin, (req, res) => {
   res.render('home', {

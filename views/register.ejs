@@ -1,47 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register User</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Registration - Smart Farmer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+      --bg-light: url('https://plus.unsplash.com/premium_photo-1675198764382-94d5c093df30?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fG5hdHVyZSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D');
+      --box-bg-dark: #111;
+      --box-bg-light: rgba(255, 255, 255, 0.9);
+      --text-dark: #eee;
+      --text-light: #111;
+      --label-dark: #bbb;
+      --label-light: #444;
+      --accent-dark: #00fff2;
+      --accent-light: #0077cc;
+      --input-dark: #1e1e1e;
+      --input-light: #f9f9f9;
+      --border-dark: #333;
+      --border-light: #ccc;
+    }
 
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-image: var(--bg-dark);
+      background-size: cover;
+      background-position: center;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    body.light-mode {
+      background-image: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    .container {
+      background: var(--box-bg-dark);
+      padding: 50px 40px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.1);
+      animation: fadeIn 1s ease;
+    }
+
+    body.light-mode .container {
+      background: var(--box-bg-light);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: var(--accent-dark);
+      font-size: 28px;
+    }
+
+    body.light-mode .container h2 { color: var(--accent-light); }
+
+    .form-group { margin-bottom: 22px; }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--label-dark);
+    }
+
+    body.light-mode .form-group label { color: var(--label-light); }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px;
+      background: var(--input-dark);
+      border: 1px solid var(--border-dark);
+      border-radius: 8px;
+      color: var(--text-dark);
+      font-size: 15px;
+      transition: border 0.3s ease;
+    }
+
+    body.light-mode .form-group input {
+      background: var(--input-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-light);
+    }
+
+    .form-group input:focus { border-color: var(--accent-dark); }
+
+    .toggle-password {
+      float: right;
+      margin-top: -30px;
+      margin-right: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--label-dark);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #00adb5, #0077cc);
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      transform: scale(1.02);
+      background: linear-gradient(135deg, #007e86, #005fa3);
+    }
+
+    .login-link {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .login-link a {
+      color: var(--accent-dark);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    body.light-mode .login-link a { color: var(--accent-light); }
+
+    .mode-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    @media (max-width: 500px) {
+      .container { margin: 20px; padding: 35px 25px; }
+    }
+  </style>
+</head>
 <body>
+  <div class="mode-toggle" onclick="toggleMode()">🌗 Toggle Mode</div>
+
   <div class="container">
-    <div class="row">
-      <div class="col-5">
-        <div class="card mt-5">
-          <div class="card-header">
-            <h3>User Registration</h3>
-          </div>
-          <div class="card-body">
-            <form action="/register" method="POST">
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Name</label>
-                <input type="text" name="name" class="form-control" id="exampleInputEmail1"
-                  aria-describedby="emailHelp">
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Email address</label>
-                <input type="email" name="username" class="form-control" id="exampleInputEmail1"
-                  aria-describedby="emailHelp">
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" name="userpassword" class=" form-control" id="exampleInputPassword1">
-              </div>
-              <button type="submit" class="btn btn-primary">Register</button>
-            </form>
-            <br>
-            <a href="/login"><button class="btn btn-primary">Login</button></a>
-          </div>
-        </div>
+    <h2>User Registration</h2>
+    <form action="/register" method="POST">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" name="name" id="name" placeholder="Enter your name" required />
       </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" name="username" id="email" placeholder="Enter your email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" name="userpassword" id="password" placeholder="Create a password" required />
+        <span class="toggle-password" onclick="togglePassword()">👁</span>
+      </div>
+
+      <button type="submit" class="submit-btn">Register</button>
+    </form>
+
+    <div class="login-link">
+      Already have an account? <a href="/login">Login</a>
     </div>
   </div>
-</body>
 
+  <script>
+    function toggleMode() {
+      document.body.classList.toggle('light-mode');
+    }
+
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+    }
+  </script>
+</body>
 </html>

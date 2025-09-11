@@ -14,7 +14,7 @@ let checkLogin = (req, res, next) => {
 
 // Routes
 router.get('/', checkLogin, (req, res) => {
-  res.render('home1', {
+  res.render('home', {
     error: null,
     user: req.session.user,
     name: req.session.name

@@ -1,16 +1,794 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sahara — Help Hub (mock)</title>
+
+  <style>
+    /* ---------- Palette & reset ---------- */
+    :root{
+      --bg: #0b1220;         /* page background */
+      --panel: #14202b;      /* main panels */
+      --panel-2: #15232d;    /* slightly lighter panel */
+      --muted: #9aa6b3;
+      --text: #e6eef6;
+      --brand-blue: #4a86ff;
+      --danger: #ff4b4b;
+      --accent-green: #10b981;
+      --card-border-alert: rgba(255,75,75,0.18);
+      --card-border-success: rgba(16,185,129,0.12);
+      --glass: rgba(255,255,255,0.03);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* ---------- layout ---------- */
+    .app {
+      display:flex;
+      height:100vh;
+      gap:24px;
+      padding:20px;
+    }
+
+    /* Sidebar (small mock) */
+    .sidebar{
+      width:260px;
+      background:linear-gradient(180deg,var(--panel),var(--panel-2));
+      border-radius:12px;
+      padding:20px;
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+      box-shadow: 0 6px 24px rgba(2,6,23,0.6);
+    }
+    .logo{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .logo .mark{
+      width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#ff8a3d,#ff5a8a);
+      display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;
+    }
+    .logo h3{font-size:18px;margin:0}
+    .emergency{
+      background: linear-gradient(90deg,#ff5a5a,#ff2d2d);
+      color:#fff;
+      padding:12px;
+      border-radius:12px;
+      text-align:center;
+      font-weight:700;
+      box-shadow:0 6px 18px rgba(255,74,74,0.12);
+    }
+    .nav a{display:block;color:var(--muted);text-decoration:none;padding:10px;border-radius:8px;margin:6px 0}
+    .nav a.active{background:rgba(255,255,255,0.02);color:var(--text)}
+
+    .register{
+      margin-top:auto;
+      background:var(--glass);
+      padding:14px;border-radius:12px;text-align:center;
+    }
+    .register a{
+      display:inline-block;margin-top:10px;padding:8px 18px;background:var(--brand-blue);color:white;border-radius:10px;text-decoration:none;
+    }
+
+    /* Main column */
+    .main {
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      overflow:hidden;
+    }
+
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:linear-gradient(180deg,var(--panel-2),var(--panel));
+      border-radius:12px;
+    }
+    .topbar h1{font-size:22px;margin:0}
+    .topbar .controls{display:flex;gap:12px;align-items:center}
+    .topbar select{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px}
+    .topbar .post-btn{background:var(--brand-blue);color:#fff;padding:10px 14px;border-radius:10px;border:none;cursor:pointer}
+
+    /* ---------- categories row ---------- */
+    .categories-row{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+    }
+
+    .category {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:12px;
+      padding:18px;
+      min-width:160px;
+      flex: 0 0 170px;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.4);
+      display:flex;flex-direction:column;gap:10px;
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .category .icon{
+      width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;
+      background:linear-gradient(135deg,#fff2, #fff1);
+    }
+    .category h4{margin:0;font-size:15px}
+    .category small{color:var(--muted);display:block;margin-top:6px;font-size:13px}
+
+    /* Need Help / Give Help segmented control */
+    .segmented {
+      display:inline-flex;
+      background:rgba(255,255,255,0.02);
+      border-radius:999px;
+      padding:4px;
+      gap:6px;
+      align-items:center;
+    }
+    .segmented button{
+      background:transparent;
+      border:none;
+      color:var(--muted);
+      padding:8px 18px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:600;
+      font-size:14px;
+    }
+    .segmented button.active{
+      background:linear-gradient(90deg,var(--danger),#ff6b6b);
+      color:white;
+      box-shadow:0 6px 18px rgba(255,75,75,0.12);
+    }
+    .segmented button.alt{
+      background:transparent;
+      color:var(--muted);
+      box-shadow:none;
+    }
+
+    /* ---------- requests grid ---------- */
+    .requests-grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:18px;
+      margin-top:12px;
+    }
+
+    .request{
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+      border-radius:12px;
+      padding:18px;
+      border:1px solid var(--card-border-alert);
+      position:relative;
+      min-height:140px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .request.urgent{ border-color: var(--card-border-alert); box-shadow: 0 6px 20px rgba(255,75,75,0.04); }
+    .request .meta {display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
+    .tag {display:inline-block;padding:6px 10px;font-size:12px;border-radius:999px;background:rgba(255,75,75,0.12);color:#ffbaba;font-weight:700}
+    .request h3{margin:0;font-size:16px}
+    .request p{color:var(--muted);margin:6px 0 0;font-size:14px}
+
+    .request .actions{
+      display:flex;gap:10px;align-items:center;
+    }
+    .btn-help{
+      background:var(--accent-green);
+      color:#fff;
+      padding:10px 16px;border-radius:10px;border:none;font-weight:700;cursor:pointer;
+      box-shadow:0 8px 20px rgba(16,185,129,0.08);
+    }
+    .btn-call{
+      width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
+      display:inline-flex;align-items:center;justify-content:center;color:var(--muted);
+      background:rgba(255,255,255,0.01);
+    }
+
+    /* helper cards with green border (like second screenshot) */
+    .helper {
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));
+      border-radius:12px;
+      padding:18px;
+      border:1px solid var(--card-border-success);
+      box-shadow: 0 6px 18px rgba(16,185,129,0.03);
+    }
+
+    /* ---------- stats row ---------- */
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:18px;
+      margin-top:18px;
+    }
+    .stat{
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+      border-radius:12px;padding:18px;text-align:center;
+    }
+    .stat .num{font-size:22px;font-weight:700;margin-bottom:6px}
+    .stat .lbl{color:var(--muted)}
+
+    /* ---------- Modal Styles ---------- */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-content {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      margin: 5% auto;
+      padding: 0;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .modal-header {
+      padding: 24px 32px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: var(--text);
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .close {
+      color: var(--muted);
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .close:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.1);
+    }
+
+    .modal-body {
+      padding: 24px 32px 32px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 0 3px rgba(74, 134, 255, 0.1);
+    }
+
+    .form-control::placeholder {
+      color: var(--muted);
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: var(--brand-blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #3b7aff;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(74, 134, 255, 0.2);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    .tag.high {
+      background: rgba(255,165,0,0.12);
+      color: #ffda9a;
+    }
+
+    .tag.medium {
+      background: rgba(255,193,7,0.12);
+      color: #fff3cd;
+    }
+
+    /* ---------- responsiveness ---------- */
+    @media (max-width:1100px){
+      .requests-grid{ grid-template-columns: 1fr; }
+      .stats{ grid-template-columns:repeat(2,1fr); }
+      .categories-row{flex-wrap:wrap}
+    }
+    @media (max-width:720px){
+      .app{flex-direction:column;padding:12px}
+      .sidebar{width:100%;flex-direction:row;align-items:center;padding:12px;border-radius:10px}
+      .main{width:100%}
+      .topbar{flex-direction:column;align-items:flex-start;gap:10px}
+      .categories-row{gap:10px;overflow-x:auto;padding-bottom:6px}
+      .category{min-width:140px;flex:0 0 auto}
+      .stats{grid-template-columns:1fr}
+      
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      
+      .modal-content {
+        margin: 10% auto;
+        width: 95%;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Home Page</h1>
-  <p>Hello, 
-    <%= name %>
-    <%= user %>
-  </p>
-  <a href="/logout">Logout</a>
+
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Sidebar">
+      <div class="logo">
+        <div class="mark">S</div>
+        <div>
+          <h3>Sahara</h3>
+          <div style="color:var(--muted);font-size:13px">Crisis Network Platform</div>
+          <div style="color:var(--muted);font-size:13px">
+              <%= name %>
+          </div>
+        </div>
+      </div>
+
+      <div class="emergency">📞 EMERGENCY</div>
+
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#" class="active">🏠 Home</a>
+        <a href="#">🆘 Help Hub</a>
+        <a href="#">🗺 Crisis Map</a>
+        <a href="/skills_connect">🔗 Skill Connect</a>
+        <a href="#">⚙ Settings</a>
+      </nav>
+
+      <div class="register">
+        <div style="color:var(--muted);font-weight:600">Join as Volunteer</div>
+        <a href="/logout">Logout</a>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h1>Help Hub</h1>
+          <div style="color:var(--muted);font-size:13px">Connect people who need help with those who can help</div>
+        </div>
+
+        <div class="controls">
+          <select aria-label="City select">
+            <option>Delhi</option>
+            <option>Mumbai</option>
+            <option>Bengaluru</option>
+          </select>
+          <button class="post-btn" onclick="openHelpModal()">♡ Post Help Request</button>
+        </div>
+      </header>
+
+      <!-- categories + toggle -->
+      <section>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px;">
+          <div class="categories-row" role="list">
+            <div class="category" role="listitem">
+              <div class="icon" style="background:linear-gradient(135deg,#ff6b6b,#ff9a9e)">🏥</div>
+              <h4>Medical</h4>
+              <small>23 active requests</small>
+            </div>
+
+            <div class="category" role="listitem">
+              <div class="icon" style="background:linear-gradient(135deg,#ffb86b,#ffd18a)">🍴</div>
+              <h4>Food</h4>
+              <small>15 active requests</small>
+            </div>
+
+            <div class="category" role="listitem">
+              <div class="icon" style="background:linear-gradient(135deg,#7c5cff,#9b8cff)">💼</div>
+              <h4>Jobs</h4>
+              <small>42 active requests</small>
+            </div>
+
+            <div class="category" role="listitem">
+              <div class="icon" style="background:linear-gradient(135deg,#34d399,#60e3b9)">🏠</div>
+              <h4>Shelter</h4>
+              <small>8 active requests</small>
+            </div>
+
+            <div class="category" role="listitem">
+              <div class="icon" style="background:linear-gradient(135deg,#ff7ab6,#ffb0df)">🚗</div>
+              <h4>Transport</h4>
+              <small>12 active requests</small>
+            </div>
+
+            <div class="category" role="listitem">
+              <div class="icon" style="background:linear-gradient(135deg,#7c5cff,#c18bff)">📚</div>
+              <h4>Education</h4>
+              <small>19 active requests</small>
+            </div>
+          </div>
+
+          <!-- Need Help / Give Help segmented control -->
+          <div class="segmented" role="tablist" aria-label="Need or Give help">
+            <button class="active" aria-pressed="true">Need Help (67)</button>
+            <button class="alt" aria-pressed="false">Give Help (124)</button>
+          </div>
+        </div>
+
+        <!-- Requests -->
+        <div class="requests-grid" id="requestsContainer" aria-live="polite">
+          <article class="request urgent" aria-label="Medical Emergency">
+            <div class="meta">
+              <div style="display:flex;gap:12px;align-items:center">
+                <div style="font-size:20px">🩸</div>
+                <div>
+                  <div style="font-weight:800">Medical Emergency</div>
+                  <div style="color:var(--muted);font-size:13px">Critical · 2 min ago</div>
+                </div>
+              </div>
+              <div class="tag">Critical</div>
+            </div>
+
+            <div>
+              <h3>Need O+ blood urgently for surgery</h3>
+              <p style="margin-top:10px">📍 AIIMS, Delhi</p>
+            </div>
+
+            <div class="actions">
+              <button class="btn-help">I Can Help</button>
+              <button class="btn-call" title="Call">📞</button>
+            </div>
+          </article>
+
+          <article class="request urgent" aria-label="Food Emergency">
+            <div class="meta">
+              <div style="display:flex;gap:12px;align-items:center">
+                <div style="font-size:20px">🍽</div>
+                <div>
+                  <div style="font-weight:800">Food Emergency</div>
+                  <div style="color:var(--muted);font-size:13px">High · 15 min ago</div>
+                </div>
+              </div>
+              <div class="tag high">High</div>
+            </div>
+
+            <div>
+              <h3>Family of 4 needs food for 3 days</h3>
+              <p style="margin-top:10px">📍 Sector 15, Noida</p>
+            </div>
+
+            <div class="actions">
+              <button class="btn-help">I Can Help</button>
+              <button class="btn-call" title="Call">📞</button>
+            </div>
+          </article>
+
+          <!-- helper card as example (green border style) -->
+          <div class="helper" aria-label="Transportation helper">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-weight:800">Transportation</div>
+                <div style="color:var(--muted);font-size:13px">Ramesh Kumar · South Delhi</div>
+              </div>
+              <div style="font-weight:700;color:#ffd166">★ 4.8</div>
+            </div>
+
+            <p style="margin:12px 0 0;color:var(--muted)">Free rides for medical emergencies</p>
+
+            <div style="display:flex;justify-content:flex-start;gap:12px;margin-top:14px;align-items:center">
+              <button style="background:#4a86ff;padding:10px 18px;border-radius:10px;border:none;color:white;cursor:pointer">Contact Helper</button>
+              <div style="width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center">♡</div>
+            </div>
+          </div>
+
+          <!-- second helper -->
+          <div class="helper" aria-label="Mental Health helper">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-weight:800">Mental Health</div>
+                <div style="color:var(--muted);font-size:13px">Dr. Priya Sharma · Gurgaon</div>
+              </div>
+              <div style="font-weight:700;color:#ffd166">★ 4.9</div>
+            </div>
+
+            <p style="margin:12px 0 0;color:var(--muted)">Free counseling sessions</p>
+
+            <div style="display:flex;justify-content:flex-start;gap:12px;margin-top:14px;align-items:center">
+              <button style="background:#4a86ff;padding:10px 18px;border-radius:10px;border:none;color:white;cursor:pointer">Contact Helper</button>
+              <div style="width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center">♡</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- stats -->
+      <section class="stats" aria-label="Statistics">
+        <div class="stat">
+          <div style="font-size:18px;background:rgba(255,255,255,0.02);display:inline-block;padding:10px;border-radius:10px">👥</div>
+          <div class="num">12,547</div>
+          <div class="lbl">Active Helpers</div>
+        </div>
+
+        <div class="stat">
+          <div style="font-size:18px;background:rgba(255,255,255,0.02);display:inline-block;padding:10px;border-radius:10px">💚</div>
+          <div class="num">3,892</div>
+          <div class="lbl">Lives Saved</div>
+        </div>
+
+        <div class="stat">
+          <div style="font-size:18px;background:rgba(255,255,255,0.02);display:inline-block;padding:10px;border-radius:10px">⏱</div>
+          <div class="num">4.2 min</div>
+          <div class="lbl">Avg Response Time</div>
+        </div>
+
+        <div class="stat">
+          <div style="font-size:18px;background:rgba(255,255,255,0.02);display:inline-block;padding:10px;border-radius:10px">📍</div>
+          <div class="num">156</div>
+          <div class="lbl">Cities Covered</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Help Request Modal -->
+  <div id="helpModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Post Help Request</h2>
+        <button class="close" onclick="closeHelpModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="helpRequestForm">
+          <div class="form-group">
+            <label for="helpCategory">Category</label>
+            <select id="helpCategory" class="form-control" required>
+              <option value="">Select category</option>
+              <option value="Medical">🏥 Medical</option>
+              <option value="Food">🍴 Food</option>
+              <option value="Jobs">💼 Jobs</option>
+              <option value="Shelter">🏠 Shelter</option>
+              <option value="Transport">🚗 Transport</option>
+              <option value="Education">📚 Education</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="helpTitle">Title</label>
+            <input type="text" id="helpTitle" class="form-control" placeholder="Brief description of your need" required>
+          </div>
+
+          <div class="form-group">
+            <label for="helpDescription">Description</label>
+            <textarea id="helpDescription" class="form-control" placeholder="Provide detailed information about your request" required></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="helpName">Your Name</label>
+              <input type="text" id="helpName" class="form-control" placeholder="Enter your name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="helpLocation">Location</label>
+              <input type="text" id="helpLocation" class="form-control" placeholder="Enter location" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="helpUrgency">Urgency Level</label>
+              <select id="helpUrgency" class="form-control" required>
+                <option value="">Select urgency</option>
+                <option value="Critical">Critical</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="helpDuration">Duration/Timeline</label>
+              <input type="text" id="helpDuration" class="form-control" placeholder="e.g., Immediate, 2 days, 1 week" required>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeHelpModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Post Request</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openHelpModal() {
+      document.getElementById('helpModal').style.display = 'block';
+    }
+
+    function closeHelpModal() {
+      document.getElementById('helpModal').style.display = 'none';
+      document.getElementById('helpRequestForm').reset();
+    }
+
+    // Close modal when clicking outside of it
+    window.onclick = function(event) {
+      const modal = document.getElementById('helpModal');
+      if (event.target === modal) {
+        closeHelpModal();
+      }
+    }
+
+    // Handle form submission
+    document.getElementById('helpRequestForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const category = document.getElementById('helpCategory').value;
+      const title = document.getElementById('helpTitle').value;
+      const description = document.getElementById('helpDescription').value;
+      const name = document.getElementById('helpName').value;
+      const location = document.getElementById('helpLocation').value;
+      const urgency = document.getElementById('helpUrgency').value;
+      const duration = document.getElementById('helpDuration').value;
+
+      // Create new request card
+      const newRequest = createHelpRequestCard({
+        category,
+        title,
+        description,
+        name,
+        location,
+        urgency,
+        duration
+      });
+
+      // Add to the beginning of requests container
+      const container = document.getElementById('requestsContainer');
+      container.insertAdjacentHTML('afterbegin', newRequest);
+
+      // Close modal and reset form
+      closeHelpModal();
+      
+      // Show success message (you can replace this with a toast notification)
+      alert('Help request posted successfully!');
+    });
+
+    function createHelpRequestCard(data) {
+      const categoryIcons = {
+        'Medical': '🩸',
+        'Food': '🍽',
+        'Jobs': '💼',
+        'Shelter': '🏠',
+        'Transport': '🚗',
+        'Education': '📚'
+      };
+
+      const urgencyStyles = {
+        'Critical': 'tag',
+        'High': 'tag high',
+        'Medium': 'tag medium',
+        'Low': 'tag'
+      };
+
+      const urgencyBorder = {
+        'Critical': 'urgent',
+        'High': 'urgent',
+        'Medium': '',
+        'Low': ''
+      };
+
+      return `
+        <article class="request ${urgencyBorder[data.urgency]}" aria-label="${data.category} Request">
+          <div class="meta">
+            <div style="display:flex;gap:12px;align-items:center">
+              <div style="font-size:20px">${categoryIcons[data.category] || '❓'}</div>
+              <div>
+                <div style="font-weight:800">${data.category}</div>
+                <div style="color:var(--muted);font-size:13px">${data.urgency} · Just now</div>
+              </div>
+            </div>
+            <div class="${urgencyStyles[data.urgency]}">${data.urgency}</div>
+          </div>
+
+          <div>
+            <h3>${data.title}</h3>
+            <p style="margin-top:10px">📍 ${data.location}</p>
+          </div>
+
+          <div class="actions">
+            <button class="btn-help">I Can Help</button>
+            <button class="btn-call" title="Call">📞</button>
+          </div>
+        </article>
+      `;
+    }
+  </script>
+
 </body>
 </html>

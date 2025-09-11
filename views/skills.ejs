@@ -316,6 +316,100 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            margin: 5% auto;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .close {
+            color: #e2e8f0;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+        }
+
+        .close:hover {
+            color: #f97316;
+        }
+
+        .modal h2 {
+            color: #e2e8f0;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #e2e8f0;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .modal .btn {
+            margin-top: 1rem;
+            margin-right: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -333,11 +427,11 @@
                     <option>Bangalore</option>
                     <option>Chennai</option>
                 </select>
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" onclick="openModal('servicesModal')">
                     <span>+</span>
                     Post Services
                 </button>
-                <button class="btn btn-outline">
+                <button class="btn btn-outline" onclick="openModal('jobModal')">
                     <span>+</span>
                     Post Job Request
                 </button>
@@ -347,7 +441,7 @@
         <!-- Categories -->
         <div class="categories-grid">
             <div class="category-card">
-                <div class="category-icon construction">🏗</div>
+                <div class="category-icon construction">🏗️</div>
                 <h3>Construction</h3>
                 <p style="font-size: 0.75rem; color: #94a3b8;">67 workers</p>
             </div>
@@ -389,7 +483,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="category-badge urgency-high">
-                        🏗 Construction
+                        🏗️ Construction
                     </div>
                     <div class="time-posted">8 min ago</div>
                 </div>
@@ -406,7 +500,7 @@
                         <span>Dwarka, Delhi</span>
                     </div>
                     <div class="info-item">
-                        <span>⏱</span>
+                        <span>⏱️</span>
                         <span>2 weeks</span>
                     </div>
                     <div class="info-item">
@@ -447,7 +541,7 @@
                         <span>Lajpat Nagar, Delhi</span>
                     </div>
                     <div class="info-item">
-                        <span>⏱</span>
+                        <span>⏱️</span>
                         <span>Same day</span>
                     </div>
                     <div class="info-item">
@@ -488,7 +582,7 @@
                         <span>Connaught Place, Delhi</span>
                     </div>
                     <div class="info-item">
-                        <span>⏱</span>
+                        <span>⏱️</span>
                         <span>1 week</span>
                     </div>
                     <div class="info-item">
@@ -529,7 +623,7 @@
                         <span>Nehru Place, Delhi</span>
                     </div>
                     <div class="info-item">
-                        <span>⏱</span>
+                        <span>⏱️</span>
                         <span>3 weeks</span>
                     </div>
                     <div class="info-item">
@@ -574,5 +668,308 @@
             </div>
         </div>
     </div>
+
+    <!-- Post Services Modal -->
+    <div id="servicesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('servicesModal')">&times;</span>
+            <h2>Post Your Services</h2>
+            <form id="servicesForm">
+                <div class="form-group">
+                    <label for="workerName">Your Name</label>
+                    <input type="text" id="workerName" name="workerName" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="workerCategory">Category</label>
+                        <select id="workerCategory" name="workerCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="🏗️ Construction">🏗️ Construction</option>
+                            <option value="🔧 Plumbing">🔧 Plumbing</option>
+                            <option value="⚡ Electrical">⚡ Electrical</option>
+                            <option value="🪚 Carpentry">🪚 Carpentry</option>
+                            <option value="🎨 Painting">🎨 Painting</option>
+                            <option value="🧹 Cleaning">🧹 Cleaning</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="workerLocation">Location</label>
+                        <input type="text" id="workerLocation" name="workerLocation" placeholder="e.g., Dwarka, Delhi" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="workerExperience">Experience (years)</label>
+                        <input type="number" id="workerExperience" name="workerExperience" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="workerRate">Daily Rate (₹)</label>
+                        <input type="number" id="workerRate" name="workerRate" min="100" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="workerSkills">Skills (comma separated)</label>
+                    <input type="text" id="workerSkills" name="workerSkills" placeholder="e.g., Residential, Commercial, Own tools" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="workerDescription">Description</label>
+                    <textarea id="workerDescription" name="workerDescription" placeholder="Describe your experience and services..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Post Services</button>
+                <button type="button" class="btn btn-outline" onclick="closeModal('servicesModal')">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Post Job Request Modal -->
+    <div id="jobModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('jobModal')">&times;</span>
+            <h2>Post Job Request</h2>
+            <form id="jobForm">
+                <div class="form-group">
+                    <label for="jobTitle">Job Title</label>
+                    <input type="text" id="jobTitle" name="jobTitle" placeholder="e.g., Need experienced mason for house construction" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="jobCategory">Category</label>
+                        <select id="jobCategory" name="jobCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="🏗️ Construction">🏗️ Construction</option>
+                            <option value="🔧 Plumbing">🔧 Plumbing</option>
+                            <option value="⚡ Electrical">⚡ Electrical</option>
+                            <option value="🪚 Carpentry">🪚 Carpentry</option>
+                            <option value="🎨 Painting">🎨 Painting</option>
+                            <option value="🧹 Cleaning">🧹 Cleaning</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobUrgency">Urgency</label>
+                        <select id="jobUrgency" name="jobUrgency" required>
+                            <option value="">Select Urgency</option>
+                            <option value="urgency-critical">Critical</option>
+                            <option value="urgency-high">High</option>
+                            <option value="urgency-medium">Medium</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="jobEmployer">Your Name/Company</label>
+                        <input type="text" id="jobEmployer" name="jobEmployer" placeholder="e.g., Sharma Family" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobLocation">Location</label>
+                        <input type="text" id="jobLocation" name="jobLocation" placeholder="e.g., Dwarka, Delhi" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="jobDuration">Duration</label>
+                        <input type="text" id="jobDuration" name="jobDuration" placeholder="e.g., 2 weeks, Same day" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobBudget">Budget (₹/day)</label>
+                        <input type="number" id="jobBudget" name="jobBudget" min="100" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="jobRequirements">Requirements (comma separated)</label>
+                    <input type="text" id="jobRequirements" name="jobRequirements" placeholder="e.g., 10+ years experience, Own tools, Available full-time" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="jobDescription">Job Description</label>
+                    <textarea id="jobDescription" name="jobDescription" placeholder="Describe the job requirements and details..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Post Job Request</button>
+                <button type="button" class="btn btn-outline" onclick="closeModal('jobModal')">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            // Reset form
+            const form = document.getElementById(modalId).querySelector('form');
+            if (form) form.reset();
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Generate random rating
+        function generateRating() {
+            return (Math.random() * (5 - 3.5) + 3.5).toFixed(1);
+        }
+
+        // Generate random time ago
+        function generateTimeAgo() {
+            const times = ['Just now', '2 min ago', '5 min ago', '15 min ago', '30 min ago', '1 hour ago'];
+            return times[Math.floor(Math.random() * times.length)];
+        }
+
+        // Handle Services Form Submission
+        document.getElementById('servicesForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const skills = formData.get('workerSkills').split(',').map(skill => skill.trim());
+            
+            const workerCard = `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="category-badge urgency-medium">
+                            ${formData.get('workerCategory')}
+                        </div>
+                        <div class="time-posted">${generateTimeAgo()}</div>
+                    </div>
+                    <h3 class="worker-name">${formData.get('workerName')}</h3>
+                    <div class="rating">
+                        <span class="stars">★★★★★</span>
+                        <span>${generateRating()}</span>
+                        <span style="color: #94a3b8;">(New)</span>
+                    </div>
+                    <p style="margin: 0.5rem 0; color: #cbd5e1;">${formData.get('workerDescription')}</p>
+                    
+                    <div class="card-info">
+                        <div class="info-item">
+                            <span>📍</span>
+                            <span>${formData.get('workerLocation')}</span>
+                        </div>
+                        <div class="info-item">
+                            <span>💼</span>
+                            <span>${formData.get('workerExperience')} years experience</span>
+                        </div>
+                        <div class="info-item">
+                            <span>💰</span>
+                            <span>₹${formData.get('workerRate')}/day</span>
+                        </div>
+                        <div class="info-item">
+                            <span>📞</span>
+                            <span>Available for contact</span>
+                        </div>
+                    </div>
+
+                    <div class="skills">
+                        ${skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn btn-primary btn-small">Hire Now</button>
+                        <button class="btn btn-outline btn-small">View Profile</button>
+                    </div>
+                </div>
+            `;
+            
+            document.querySelector('.content-grid').insertAdjacentHTML('afterbegin', workerCard);
+            closeModal('servicesModal');
+            
+            // Update worker count in tab
+            const workerTab = document.querySelector('.tab-btn.inactive');
+            if (workerTab) {
+                const currentCount = parseInt(workerTab.textContent.match(/\d+/)[0]);
+                workerTab.textContent = `Available Workers (${currentCount + 1})`;
+            }
+        });
+
+        // Handle Job Request Form Submission
+        document.getElementById('jobForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const requirements = formData.get('jobRequirements').split(',').map(req => req.trim());
+            
+            const jobCard = `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="category-badge ${formData.get('jobUrgency')}">
+                            ${formData.get('jobCategory')}
+                        </div>
+                        <div class="time-posted">${generateTimeAgo()}</div>
+                    </div>
+                    <h3 class="job-title">${formData.get('jobTitle')}</h3>
+                    <p style="margin: 0.5rem 0; color: #cbd5e1;">${formData.get('jobDescription')}</p>
+                    
+                    <div class="card-info">
+                        <div class="info-item">
+                            <span>👤</span>
+                            <span>${formData.get('jobEmployer')}</span>
+                        </div>
+                        <div class="info-item">
+                            <span>📍</span>
+                            <span>${formData.get('jobLocation')}</span>
+                        </div>
+                        <div class="info-item">
+                            <span>⏱️</span>
+                            <span>${formData.get('jobDuration')}</span>
+                        </div>
+                        <div class="info-item">
+                            <span>💰</span>
+                            <span>₹${formData.get('jobBudget')}/day</span>
+                        </div>
+                    </div>
+
+                    <div class="skills">
+                        ${requirements.map(req => `<span class="skill-tag">${req}</span>`).join('')}
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn btn-primary btn-small">I Can Help</button>
+                        <button class="btn btn-outline btn-small">View Details</button>
+                    </div>
+                </div>
+            `;
+            
+            document.querySelector('.content-grid').insertAdjacentHTML('afterbegin', jobCard);
+            closeModal('jobModal');
+            
+            // Update job request count in tab
+            const jobTab = document.querySelector('.tab-btn.active');
+            if (jobTab) {
+                const currentCount = parseInt(jobTab.textContent.match(/\d+/)[0]);
+                jobTab.textContent = `Need Worker (${currentCount + 1})`;
+            }
+        });
+
+        // Tab switching functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active/inactive classes
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active', 'inactive');
+                        btn.classList.add(btn === this ? 'active' : 'inactive');
+                    });
+                    
+                    // Here you could add logic to show/hide different content
+                    // For now, we'll keep all cards visible
+                });
+            });
+        });
+    </script>
 </body>
 </html>

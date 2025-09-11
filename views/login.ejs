@@ -1,46 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login User</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Smart Farmer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+      --bg-light: #f0f0f0;
+      --container-dark: #111;
+      --container-light: #ffffff;
+      --text-dark: #eee;
+      --text-light: #111;
+      --accent-dark: #00fff2;
+      --accent-light: #0077cc;
+      --input-dark: #1e1e1e;
+      --input-light: #fff;
+      --border-dark: #333;
+      --border-light: #ccc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      transition: all 0.4s ease;
+    }
+
+    body.light {
+      background: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    .container {
+      background: var(--container-dark);
+      padding: 50px 40px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.1);
+      transition: all 0.4s ease;
+    }
+
+    body.light .container {
+      background: var(--container-light);
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: var(--accent-dark);
+    }
+
+    body.light .container h2 {
+      color: var(--accent-light);
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px;
+      background: var(--input-dark);
+      border: 1px solid var(--border-dark);
+      border-radius: 8px;
+      color: var(--text-dark);
+    }
+
+    body.light .form-group input {
+      background: var(--input-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-light);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 14px;
+      color: gray;
+    }
+
+    .form-group.password-group {
+      position: relative;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #00adb5, #0077cc);
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      transform: scale(1.02);
+      background: linear-gradient(135deg, #007e86, #005fa3);
+    }
+
+    .signup-link {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    .signup-link a {
+      color: var(--accent-dark);
+      text-decoration: none;
+    }
+
+    .mode-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 8px 14px;
+      font-size: 13px;
+      background: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    body.light .mode-toggle {
+      background: rgba(255, 255, 255, 0.7);
+      color: #111;
+    }
+  </style>
 </head>
-
 <body>
-  <div class="container">
-    <div class="row">
-      <div class="col-5">
-        <div class="card mt-5">
-          <div class="card-header">
-            <h3>Login</h3>
-          </div>
-          <div class="card-body">
-            <form action="/login" method="POST">
-              <div class="mb-3">
-                <label for="InputEmail1" class="form-label">Email address</label>
-                <input type="email" name="username" class="form-control" id="InputEmail1"
-                  aria-describedby="emailHelp">
-              </div>
-              <div class="mb-3">
-                <label for="InputPassword1" class="form-label">Password</label>
-                <input type="password" name="userpassword" class=" form-control" id="InputPassword1">
-              </div>
-              <button type="submit" class="btn btn-primary">Login</button>
-            </form>
-            <br>
-            <a href="/register"><button class="btn btn-primary">register</button></a>
-            
-            <% if(error){ %> 
-              <div class="alert alert-danger mt-3"><%= error %> </div>
-            <% } %> 
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</body>
+  <button class="mode-toggle" onclick="toggleMode()">🌗</button>
 
+  <div class="container">
+    <h2>Login</h2>
+    <form action="/login" method="POST">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input name="username" type="email" id="email" placeholder="Enter your email" required />
+      </div>
+      <div class="form-group password-group">
+        <label for="password">Password</label>
+        <input name="userpassword" type="password" id="password" placeholder="Enter your password" required />
+        <span class="toggle-password" onclick="togglePassword()">👁</span>
+      </div>
+      <button type="submit" class="submit-btn">Login</button>
+    </form>
+    <div class="signup-link">
+      Don't have an account? <a href="/register">Sign up</a>
+    </div>
+    <% if(error){ %> 
+      <div class="form-group"><%= error %> </div>
+    <% } %>
+  </div>
+
+  <script>
+    function fakeLogin(e) {
+      e.preventDefault();
+      alert("Login successful!");
+      window.location.href = "main.html";
+    }
+
+    function togglePassword() {
+      const passField = document.getElementById("password");
+      passField.type = passField.type === "password" ? "text" : "password";
+    }
+
+    function toggleMode() {
+      document.body.classList.toggle('light');
+    }
+  </script>
+</body>
 </html>

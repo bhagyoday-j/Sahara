@@ -8,6 +8,7 @@ const connectDB = require('./config/db');
 require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
+const post = require('./routes/post');
 
 const PORT = process.env.PORT
 
@@ -36,72 +37,73 @@ let checkLogin = (req,res,next) => {
 }
 
 app.use('/', authRoutes);
+app.use('/', post);
 // Routes
-app.get('/', checkLogin, (req, res) => {
-  res.render('home1', { 
-    error: null,
-    user: req.session.user,
-    name: req.session.name
-  });
-});
+// app.get('/', checkLogin, (req, res) => {
+//   res.render('home1', { 
+//     error: null,
+//     user: req.session.user,
+//     name: req.session.name
+//   });
+// });
 
-app.get('/skills_connect',checkLogin, (req, res) => {
-  res.render('skills');
-});
+// app.get('/skills_connect',checkLogin, (req, res) => {
+//   res.render('skills');
+// });
 
-app.get('/profile',checkLogin, (req, res) => {
-  res.send(`<h1>Profile Page</h1>
-    <p>Hello, ${req.session.user}</p>
-    <a href="/logout">Logout</a>
-    `);
-});
+// app.get('/profile',checkLogin, (req, res) => {
+//   res.send(`<h1>Profile Page</h1>
+//     <p>Hello, ${req.session.user}</p>
+//     <a href="/logout">Logout</a>
+//     `);
+// });
 
 
-app.get('/login', (req, res) => {
-  if(req.session.user){
-    res.redirect('/')
-  }else{
-    res.render('login',{ error: null});
-  }
+// app.get('/login', (req, res) => {
+//   if(req.session.user){
+//     res.redirect('/')
+//   }else{
+//     res.render('login',{ error: null});
+//   }
   
-});
+// });
 
-app.get('/register', (req, res) => {
-  res.render('register',{ error: null});
-});
+// app.get('/register', (req, res) => {
+//   res.render('register',{ error: null});
+// });
 
-app.post('/register',async (req, res) => {
-  const {username, userpassword, name} = req.body
+// app.post('/register',async (req, res) => {
+//   const {username, userpassword, name} = req.body
 
-  const user = await User.findOne({username})
-  if(user) return res.render('login', { error: 'User Already Exist Login here'})
+//   const user = await User.findOne({username})
+//   if(user) return res.render('login', { error: 'User Already Exist Login here'})
 
-  const hasedPassword = await bcrypt.hash(userpassword, 10)
+//   const hasedPassword = await bcrypt.hash(userpassword, 10)
 
-  // res.send({username, userpassword: hasedPassword })
-  await User.create({username, userpassword: hasedPassword, name})
-  res.redirect('/login')
-})
+//   // res.send({username, userpassword: hasedPassword })
+//   await User.create({username, userpassword: hasedPassword, name})
+//   res.redirect('/login')
+// })
 
-app.post('/login',async (req, res) => {
-  const {username, userpassword} = req.body
+// app.post('/login',async (req, res) => {
+//   const {username, userpassword} = req.body
 
-  const user = await User.findOne({username})
-  if(!user) return res.render('login', { error: 'User not found'})
+//   const user = await User.findOne({username})
+//   if(!user) return res.render('login', { error: 'User not found'})
 
-  const isMatch = await bcrypt.compare(userpassword, user.userpassword)
-  if(!isMatch) return res.render('login', { error: 'Invalid Password'})
+//   const isMatch = await bcrypt.compare(userpassword, user.userpassword)
+//   if(!isMatch) return res.render('login', { error: 'Invalid Password'})
 
-    req.session.user = username;
-    req.session.name = user.name;
-    res.redirect('/')
-})
+//     req.session.user = username;
+//     req.session.name = user.name;
+//     res.redirect('/')
+// })
 
-app.get('/logout', (req, res) => {
-  req.session.destroy(() => {
-    res.redirect('/login')
-  })
-})
+// app.get('/logout', (req, res) => {
+//   req.session.destroy(() => {
+//     res.redirect('/login')
+//   })
+// })
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

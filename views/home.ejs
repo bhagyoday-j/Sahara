@@ -496,95 +496,13 @@
 
           <!-- Need Help / Give Help segmented control -->
           <div class="segmented" role="tablist" aria-label="Need or Give help">
-            <button class="active" aria-pressed="true">Need Help (67)</button>
-            <button class="alt" aria-pressed="false">Give Help (124)</button>
+            <button class="active" aria-pressed="true">Need Help</button>
+            <button class="alt" aria-pressed="false" disabled>Give Help</button>
           </div>
         </div>
 
         <!-- Requests -->
-        <div class="requests-grid" id="requestsContainer" aria-live="polite">
-          <article class="request urgent" aria-label="Medical Emergency">
-            <div class="meta">
-              <div style="display:flex;gap:12px;align-items:center">
-                <div style="font-size:20px">🩸</div>
-                <div>
-                  <div style="font-weight:800">Medical Emergency</div>
-                  <div style="color:var(--muted);font-size:13px">Critical · 2 min ago</div>
-                </div>
-              </div>
-              <div class="tag">Critical</div>
-            </div>
-
-            <div>
-              <h3>Need O+ blood urgently for surgery</h3>
-              <p style="margin-top:10px">📍 AIIMS, Delhi</p>
-            </div>
-
-            <div class="actions">
-              <button class="btn-help">I Can Help</button>
-              <button class="btn-call" title="Call">📞</button>
-            </div>
-          </article>
-
-          <article class="request urgent" aria-label="Food Emergency">
-            <div class="meta">
-              <div style="display:flex;gap:12px;align-items:center">
-                <div style="font-size:20px">🍽</div>
-                <div>
-                  <div style="font-weight:800">Food Emergency</div>
-                  <div style="color:var(--muted);font-size:13px">High · 15 min ago</div>
-                </div>
-              </div>
-              <div class="tag high">High</div>
-            </div>
-
-            <div>
-              <h3>Family of 4 needs food for 3 days</h3>
-              <p style="margin-top:10px">📍 Sector 15, Noida</p>
-            </div>
-
-            <div class="actions">
-              <button class="btn-help">I Can Help</button>
-              <button class="btn-call" title="Call">📞</button>
-            </div>
-          </article>
-
-          <!-- helper card as example (green border style) -->
-          <div class="helper" aria-label="Transportation helper">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div>
-                <div style="font-weight:800">Transportation</div>
-                <div style="color:var(--muted);font-size:13px">Ramesh Kumar · South Delhi</div>
-              </div>
-              <div style="font-weight:700;color:#ffd166">★ 4.8</div>
-            </div>
-
-            <p style="margin:12px 0 0;color:var(--muted)">Free rides for medical emergencies</p>
-
-            <div style="display:flex;justify-content:flex-start;gap:12px;margin-top:14px;align-items:center">
-              <button style="background:#4a86ff;padding:10px 18px;border-radius:10px;border:none;color:white;cursor:pointer">Contact Helper</button>
-              <div style="width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center">♡</div>
-            </div>
-          </div>
-
-          <!-- second helper -->
-          <div class="helper" aria-label="Mental Health helper">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div>
-                <div style="font-weight:800">Mental Health</div>
-                <div style="color:var(--muted);font-size:13px">Dr. Priya Sharma · Gurgaon</div>
-              </div>
-              <div style="font-weight:700;color:#ffd166">★ 4.9</div>
-            </div>
-
-            <p style="margin:12px 0 0;color:var(--muted)">Free counseling sessions</p>
-
-            <div style="display:flex;justify-content:flex-start;gap:12px;margin-top:14px;align-items:center">
-              <button style="background:#4a86ff;padding:10px 18px;border-radius:10px;border:none;color:white;cursor:pointer">Contact Helper</button>
-              <div style="width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center">♡</div>
-            </div>
-          </div>
-        </div>
+        <div class="requests-grid" id="requestsContainer" aria-live="polite"></div>
       </section>
 
       <!-- stats -->
@@ -627,7 +545,7 @@
         <form id="helpRequestForm">
           <div class="form-group">
             <label for="helpCategory">Category</label>
-            <select id="helpCategory" class="form-control" required>
+            <select name="category" id="helpCategory" class="form-control" required>
               <option value="">Select category</option>
               <option value="Medical">🏥 Medical</option>
               <option value="Food">🍴 Food</option>
@@ -640,41 +558,40 @@
 
           <div class="form-group">
             <label for="helpTitle">Title</label>
-            <input type="text" id="helpTitle" class="form-control" placeholder="Brief description of your need" required>
+            <input name="title" type="text" id="helpTitle" class="form-control" placeholder="Brief description of your need" required>
           </div>
 
           <div class="form-group">
             <label for="helpDescription">Description</label>
-            <textarea id="helpDescription" class="form-control" placeholder="Provide detailed information about your request" required></textarea>
+            <textarea name="description" id="helpDescription" class="form-control" placeholder="Provide detailed information about your request" required></textarea>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="helpName">Your Name</label>
-              <input type="text" id="helpName" class="form-control" placeholder="Enter your name" required>
+              <input name="name" type="text" id="helpName" class="form-control" placeholder="Enter your name" required>
             </div>
 
             <div class="form-group">
               <label for="helpLocation">Location</label>
-              <input type="text" id="helpLocation" class="form-control" placeholder="Enter location" required>
+              <input name="location" type="text" id="helpLocation" class="form-control" placeholder="Enter location" required>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="helpUrgency">Urgency Level</label>
-              <select id="helpUrgency" class="form-control" required>
+              <select name="urgency" id="helpUrgency" class="form-control" required>
                 <option value="">Select urgency</option>
-                <option value="Critical">Critical</option>
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
               </select>
             </div>
 
             <div class="form-group">
               <label for="helpDuration">Duration/Timeline</label>
-              <input type="text" id="helpDuration" class="form-control" placeholder="e.g., Immediate, 2 days, 1 week" required>
+              <input name="time" type="text" id="helpDuration" class="form-control" placeholder="e.g., Immediate, 2 days, 1 week" required>
             </div>
           </div>
 
@@ -705,38 +622,59 @@
       }
     }
 
-    // Handle form submission
-    document.getElementById('helpRequestForm').addEventListener('submit', function(e) {
+    // On page load, fetch all posts and show them (newest first)
+    document.addEventListener('DOMContentLoaded', async function() {
+      window.currentUser = '<%= user %>';
+      try {
+        const res = await fetch('/posts', { credentials: 'same-origin' });
+        if (!res.ok) return; // stay silent on error
+        const posts = await res.json();
+        const container = document.getElementById('requestsContainer');
+        if (Array.isArray(posts) && posts.length > 0) {
+          container.innerHTML = posts.map(p => createHelpRequestCard(p)).join('');
+        } else {
+          container.innerHTML = '';
+        }
+      } catch (e) {
+        // ignore network errors for initial load
+      }
+    });
+
+    // Handle form submission -> call backend then render only the created post
+    document.getElementById('helpRequestForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      
-      const category = document.getElementById('helpCategory').value;
-      const title = document.getElementById('helpTitle').value;
-      const description = document.getElementById('helpDescription').value;
-      const name = document.getElementById('helpName').value;
-      const location = document.getElementById('helpLocation').value;
-      const urgency = document.getElementById('helpUrgency').value;
-      const duration = document.getElementById('helpDuration').value;
 
-      // Create new request card
-      const newRequest = createHelpRequestCard({
-        category,
-        title,
-        description,
-        name,
-        location,
-        urgency,
-        duration
-      });
+      const payload = {
+        category: document.getElementById('helpCategory').value,
+        title: document.getElementById('helpTitle').value,
+        description: document.getElementById('helpDescription').value,
+        name: document.getElementById('helpName').value,
+        location: document.getElementById('helpLocation').value,
+        urgency: document.getElementById('helpUrgency').value,
+        time: document.getElementById('helpDuration').value
+      };
 
-      // Add to the beginning of requests container
-      const container = document.getElementById('requestsContainer');
-      container.insertAdjacentHTML('afterbegin', newRequest);
+      try {
+        const res = await fetch('/posts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          credentials: 'same-origin'
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ error: 'Failed to create' }));
+          alert(err.error || 'Failed to create post');
+          return;
+        }
+        const created = await res.json();
 
-      // Close modal and reset form
-      closeHelpModal();
-      
-      // Show success message (you can replace this with a toast notification)
-      alert('Help request posted successfully!');
+        const container = document.getElementById('requestsContainer');
+        container.insertAdjacentHTML('afterbegin', createHelpRequestCard(created));
+
+        closeHelpModal();
+      } catch (err) {
+        alert('Network error');
+      }
     });
 
     function createHelpRequestCard(data) {
@@ -750,21 +688,19 @@
       };
 
       const urgencyStyles = {
-        'Critical': 'tag',
-        'High': 'tag high',
-        'Medium': 'tag medium',
-        'Low': 'tag'
+        'high': 'tag high',
+        'medium': 'tag medium',
+        'low': 'tag'
       };
 
       const urgencyBorder = {
-        'Critical': 'urgent',
-        'High': 'urgent',
-        'Medium': '',
-        'Low': ''
+        'high': 'urgent',
+        'medium': '',
+        'low': ''
       };
 
       return `
-        <article class="request ${urgencyBorder[data.urgency]}" aria-label="${data.category} Request">
+        <article class="request ${urgencyBorder[data.urgency]}" aria-label="${data.category} Request" data-id="${data._id}">
           <div class="meta">
             <div style="display:flex;gap:12px;align-items:center">
               <div style="font-size:20px">${categoryIcons[data.category] || '❓'}</div>
@@ -782,11 +718,74 @@
           </div>
 
           <div class="actions">
-            <button class="btn-help">I Can Help</button>
-            <button class="btn-call" title="Call">📞</button>
+            <button class="btn-help" onclick="volunteer('${data._id}')">I Can Help</button>
+            ${data.ownerUsername && (window.currentUser || '').toLowerCase() === data.ownerUsername ? `
+              <button class=\"btn-call\" title=\"Delete\" onclick=\"deletePost('${data._id}')\">🗑</button>
+              <button class=\"btn-secondary\" title=\"View Helpers\" onclick=\"viewHelpers('${data._id}')\">View Helpers</button>
+            ` : ''}
           </div>
         </article>
       `;
+    }
+
+    async function deletePost(id){
+      if(!id) return;
+      if(!confirm('Delete this post?')) return;
+      try {
+        const res = await fetch('/posts/' + id, { method: 'DELETE', credentials: 'same-origin' });
+        if(res.status === 204){
+          const el = document.querySelector(`[data-id="${id}"]`);
+          if (el && el.parentNode) el.parentNode.removeChild(el);
+        } else {
+          const err = await res.json().catch(()=>({error:'Failed'}));
+          alert(err.error || 'Failed to delete');
+        }
+      } catch(e){
+        alert('Network error');
+      }
+    }
+
+    async function volunteer(id){
+      if(!id) return;
+      const contact = prompt('Enter your contact number to share with the requester:');
+      if(!contact) return;
+      try{
+        const res = await fetch('/posts/' + id + '/help', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ contact })
+        });
+        if(!res.ok){
+          const err = await res.json().catch(()=>({error:'Failed'}));
+          alert(err.error || 'Failed to send contact');
+          return;
+        }
+        alert('Your contact has been shared with the requester. Thank you!');
+      }catch(e){
+        alert('Network error');
+      }
+    }
+
+    async function viewHelpers(id){
+      try{
+        const res = await fetch('/posts/' + id + '/helpers', { credentials: 'same-origin' });
+        if(!res.ok){
+          const err = await res.json().catch(()=>({error:'Failed'}));
+          alert(err.error || 'Failed to load helpers');
+          return;
+        }
+        const data = await res.json();
+        const helpers = Array.isArray(data.helpers) ? data.helpers : [];
+        if(helpers.length === 0){
+          alert('No helpers yet.');
+          return;
+        }
+        const list = helpers.map(h => `• ${h.username}: ${h.contact}`).join('\n');
+        alert('Helpers for this post:\n' + list);
+      }catch(e){
+        alert('Network error');
+      }
     }
   </script>
 

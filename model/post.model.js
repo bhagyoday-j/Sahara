@@ -1,18 +1,54 @@
 const mongoose = require('mongoose')
 
 const postSchema = new mongoose.Schema({
-  title :{
+  title: {
     type: String,
-    require: true,
+    required: true,
+    trim: true
   },
-  description:{
+  description: {
     type: String,
-    require:true
+    required: true,
   },
-  address:{
+  location: {
     type: String,
-    require:true
-  }
-})
+    required: true,
+  },
+  category: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  urgency: {
+    type: String,
+    required: true,
+    enum: ['low', 'medium', 'high']
+  },
+  ownerUsername: {
+    type: String,
+    required: true,
+    lowercase: true,
+    trim: true
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  },
+  time: {
+    type: String,
+    required: true
+  },
+  helpers: [
+    {
+      username: { type: String, lowercase: true, trim: true, required: true },
+      contact: { type: String, required: true, trim: true },
+      createdAt: { type: Date, default: Date.now }
+    }
+  ]
+}, { timestamps: true })
 
 module.exports = mongoose.model('post', postSchema)

@@ -9,6 +9,7 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
 const post = require('./routes/post');
+const postsApi = require('./routes/posts.api');
 
 const PORT = process.env.PORT
 
@@ -38,6 +39,7 @@ let checkLogin = (req,res,next) => {
 
 app.use('/', authRoutes);
 app.use('/', post);
+app.use('/', postsApi);
 // Routes
 // app.get('/', checkLogin, (req, res) => {
 //   res.render('home1', { 

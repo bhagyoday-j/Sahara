@@ -17,16 +17,22 @@ router.get('/home', (req, res) => {
 });
 
 // Routes
-router.get('/', checkLogin, (req, res) => {
+router.get('/', (req, res) => {
   res.render('home', {
     error: null,
-    user: req.session.user,
-    name: req.session.name
+    user: req.session.user || '',
+    name: req.session.name || ''
   });
 });
 
 router.get('/skills_connect', checkLogin, (req, res) => {
-  res.render('skills');
+  res.render('skills', { user: req.session.user || '' });
+});
+
+// Category-specific help page
+router.get('/help/:category', checkLogin, (req, res) => {
+  const category = req.params.category;
+  res.render('help_category', { category, user: req.session.user, name: req.session.name });
 });
 
 router.get('/profile', checkLogin, (req, res) => {

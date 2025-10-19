@@ -58,6 +58,12 @@
             min-width: 120px;
         }
 
+        /* Ensure dropdown options remain readable when native UI uses white backgrounds */
+        .select option, select option {
+            background: #ffffff;
+            color: #000000;
+        }
+
         .btn {
             padding: 0.5rem 1rem;
             border-radius: 0.5rem;
@@ -111,6 +117,11 @@
         .category-card:hover {
             transform: scale(1.05);
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+        }
+
+        .category-card.active {
+            outline: 2px solid #f97316;
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.25);
         }
 
         .category-icon {
@@ -416,77 +427,82 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="header-content">
-                <h1>Skill Connect</h1>
-                <p>Connect with local skilled workers and find opportunities</p>
-            </div>
-            <div class="header-actions">
-                <select class="select">
-                    <option>Delhi</option>
-                    <option>Mumbai</option>
-                    <option>Bangalore</option>
-                    <option>Chennai</option>
-                </select>
-                <button class="btn btn-primary" onclick="openModal('servicesModal')">
-                    <span>+</span>
-                    Post Services
-                </button>
-                <button class="btn btn-outline" onclick="openModal('jobModal')">
-                    <span>+</span>
-                    Post Job Request
-                </button>
-            </div>
+          <div class="header-content">
+            <h1>Skill Connect</h1>
+            <p>Connect with local skilled workers and find opportunities</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-outline" title="Go Back" onclick="(history.length>1)?history.back():window.location.assign('/')">← Back</button>
+            <select class="select">
+              <option>Delhi</option>
+              <option>Mumbai</option>
+              <option>Bangalore</option>
+              <option>Chennai</option>
+            </select>
+            <button class="btn btn-primary" onclick="openModal('servicesModal')">
+              <span>+</span>
+              Post Services
+            </button>
+            <button class="btn btn-outline" onclick="openModal('jobModal')">
+              <span>+</span>
+              Post Job Request
+            </button>
+          </div>
         </div>
 
         <!-- Categories -->
         <div class="categories-grid">
-            <div class="category-card">
+            <div class="category-card" role="button" tabindex="0" data-category="Construction" onclick="filterCategory('Construction')">
                 <div class="category-icon construction">🏗️</div>
                 <h3>Construction</h3>
-                <p style="font-size: 0.75rem; color: #94a3b8;">67 workers</p>
+                <p style="font-size: 0.75rem; color: #94a3b8;"> <span id="cat-Construction">0</span> workers</p>
             </div>
-            <div class="category-card">
+            <div class="category-card" role="button" tabindex="0" data-category="Plumbing" onclick="filterCategory('Plumbing')">
                 <div class="category-icon plumbing">🔧</div>
                 <h3>Plumbing</h3>
-                <p style="font-size: 0.75rem; color: #94a3b8;">45 plumbers</p>
+                <p style="font-size: 0.75rem; color: #94a3b8;"> <span id="cat-Plumbing">0</span> workers</p>
             </div>
-            <div class="category-card">
+            <div class="category-card" role="button" tabindex="0" data-category="Electrical" onclick="filterCategory('Electrical')">
                 <div class="category-icon electrical">⚡</div>
                 <h3>Electrical</h3>
-                <p style="font-size: 0.75rem; color: #94a3b8;">38 electricians</p>
+                <p style="font-size: 0.75rem; color: #94a3b8;"> <span id="cat-Electrical">0</span> workers</p>
             </div>
-            <div class="category-card">
+            <div class="category-card" role="button" tabindex="0" data-category="Carpentry" onclick="filterCategory('Carpentry')">
                 <div class="category-icon carpentry">🪚</div>
                 <h3>Carpentry</h3>
-                <p style="font-size: 0.75rem; color: #94a3b8;">29 carpenters</p>
+                <p style="font-size: 0.75rem; color: #94a3b8;"> <span id="cat-Carpentry">0</span> workers</p>
             </div>
-            <div class="category-card">
+            <div class="category-card" role="button" tabindex="0" data-category="Painting" onclick="filterCategory('Painting')">
                 <div class="category-icon painting">🎨</div>
                 <h3>Painting</h3>
-                <p style="font-size: 0.75rem; color: #94a3b8;">22 painters</p>
+                <p style="font-size: 0.75rem; color: #94a3b8;"> <span id="cat-Painting">0</span> workers</p>
             </div>
-            <div class="category-card">
+            <div class="category-card" role="button" tabindex="0" data-category="Cleaning" onclick="filterCategory('Cleaning')">
                 <div class="category-icon cleaning">🧹</div>
                 <h3>Cleaning</h3>
-                <p style="font-size: 0.75rem; color: #94a3b8;">31 cleaners</p>
+                <p style="font-size: 0.75rem; color: #94a3b8;"> <span id="cat-Cleaning">0</span> workers</p>
             </div>
         </div>
 
         <!-- Action Tabs -->
         <div class="action-tabs">
-            <button class="tab-btn active">Need Worker (67)</button>
-            <button class="tab-btn inactive">Available Workers (124)</button>
+            <button class="tab-btn active">Need Worker (<span id="tab-jobs-count">0</span>)</button>
+            <button class="tab-btn inactive">Available Workers (<span id="tab-services-count">0</span>)</button>
         </div>
 
-        <!-- Job Requests -->
-        <div class="content-grid">
-            <div class="card">
+        <!-- Dynamic content from backend (Jobs + Services) -->
+        <div id="dynContent" class="content-grid"></div>
+
+        <!-- Job Requests (static demo hidden) -->
+        <div class="content-grid" style="display:none">
+            <div class="card" data-category="Construction">
                 <div class="card-header">
                     <div class="category-badge urgency-high">
                         🏗️ Construction
                     </div>
                     <div class="time-posted">8 min ago</div>
                 </div>
+
                 <h3 class="job-title">Need experienced mason for house construction</h3>
                 <p style="margin: 0.5rem 0; color: #cbd5e1;">Building a 2-story house. Need skilled mason for brickwork and concrete work.</p>
                 
@@ -521,13 +537,14 @@
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" data-category="Plumbing">
                 <div class="card-header">
                     <div class="category-badge urgency-critical">
                         🔧 Plumbing
                     </div>
                     <div class="time-posted">3 min ago</div>
                 </div>
+
                 <h3 class="job-title">Urgent plumber needed for water pipe burst</h3>
                 <p style="margin: 0.5rem 0; color: #cbd5e1;">Main water pipe burst in house. Need immediate repair to prevent flooding.</p>
                 
@@ -562,13 +579,14 @@
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" data-category="Electrical">
                 <div class="card-header">
                     <div class="category-badge urgency-medium">
                         ⚡ Electrical
                     </div>
                     <div class="time-posted">45 min ago</div>
                 </div>
+
                 <h3 class="job-title">Electrician for office wiring renovation</h3>
                 <p style="margin: 0.5rem 0; color: #cbd5e1;">Complete rewiring of 3000 sq ft office space. Modern electrical setup required.</p>
                 
@@ -603,13 +621,14 @@
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" data-category="Carpentry">
                 <div class="card-header">
                     <div class="category-badge urgency-medium">
                         🪚 Carpentry
                     </div>
                     <div class="time-posted">2 hours ago</div>
                 </div>
+
                 <h3 class="job-title">Carpenter for custom furniture making</h3>
                 <p style="margin: 0.5rem 0; color: #cbd5e1;">Making custom wardrobes, tables and chairs for residential project.</p>
                 
@@ -650,19 +669,19 @@
             <h2 class="stats-title">Platform Statistics</h2>
             <div class="stats-grid">
                 <div class="stat-item">
-                    <div class="stat-number">8,234</div>
+                    <div class="stat-number" id="sk-stat-workers">0</div>
                     <div class="stat-label">Active Skilled Workers</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">5,647</div>
+                    <div class="stat-number" id="sk-stat-completed">0</div>
                     <div class="stat-label">Jobs Completed</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">2.8 min</div>
+                    <div class="stat-number"><span id="sk-stat-avg">0.0</span> min</div>
                     <div class="stat-label">Avg Response Time</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">89</div>
+                    <div class="stat-number" id="sk-stat-cities">0</div>
                     <div class="stat-label">Cities Covered</div>
                 </div>
             </div>
@@ -799,7 +818,17 @@
         </div>
     </div>
 
+    <!-- Details Modal -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('detailsModal')">&times;</span>
+            <h2 id="detailsTitle">Details</h2>
+            <div id="detailsBody" class="card-info"></div>
+        </div>
+    </div>
+
     <script>
+        window.currentUser = '<%= (user||"\u0000").toString().replace("\u0000", "") %>';
         // Modal functions
         function openModal(modalId) {
             document.getElementById(modalId).style.display = 'block';
@@ -830,128 +859,289 @@
             return times[Math.floor(Math.random() * times.length)];
         }
 
-        // Handle Services Form Submission
-        document.getElementById('servicesForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(e.target);
-            const skills = formData.get('workerSkills').split(',').map(skill => skill.trim());
-            
-            const workerCard = `
-                <div class="card">
-                    <div class="card-header">
-                        <div class="category-badge urgency-medium">
-                            ${formData.get('workerCategory')}
-                        </div>
-                        <div class="time-posted">${generateTimeAgo()}</div>
-                    </div>
-                    <h3 class="worker-name">${formData.get('workerName')}</h3>
-                    <div class="rating">
-                        <span class="stars">★★★★★</span>
-                        <span>${generateRating()}</span>
-                        <span style="color: #94a3b8;">(New)</span>
-                    </div>
-                    <p style="margin: 0.5rem 0; color: #cbd5e1;">${formData.get('workerDescription')}</p>
-                    
-                    <div class="card-info">
-                        <div class="info-item">
-                            <span>📍</span>
-                            <span>${formData.get('workerLocation')}</span>
-                        </div>
-                        <div class="info-item">
-                            <span>💼</span>
-                            <span>${formData.get('workerExperience')} years experience</span>
-                        </div>
-                        <div class="info-item">
-                            <span>💰</span>
-                            <span>₹${formData.get('workerRate')}/day</span>
-                        </div>
-                        <div class="info-item">
-                            <span>📞</span>
-                            <span>Available for contact</span>
-                        </div>
-                    </div>
+        // Filter by top category cards
+        function filterCategory(category) {
+            // Toggle active style on category cards
+            const catCards = document.querySelectorAll('.categories-grid .category-card');
+            catCards.forEach(el => {
+                if (el.getAttribute('data-category') === category) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
 
-                    <div class="skills">
-                        ${skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
-                    </div>
+        // ================= Backend wiring =================
+        document.addEventListener('DOMContentLoaded', initSkills);
 
-                    <div class="card-actions">
-                        <button class="btn btn-primary btn-small">Hire Now</button>
-                        <button class="btn btn-outline btn-small">View Profile</button>
-                    </div>
+        async function initSkills(){
+            await loadSkillsData();
+        }
+
+        async function loadSkillsData(){
+            try{
+                const [jobsRes, servicesRes] = await Promise.all([
+                    fetch('/skills/jobs', { credentials:'same-origin' }),
+                    fetch('/skills/services', { credentials:'same-origin' })
+                ]);
+                const jobs = jobsRes.ok ? await jobsRes.json() : [];
+                const services = servicesRes.ok ? await servicesRes.json() : [];
+                const wrap = document.getElementById('dynContent');
+                wrap.innerHTML = '';
+                jobs.forEach(j => wrap.insertAdjacentHTML('beforeend', renderJobCard(j)));
+                services.forEach(s => wrap.insertAdjacentHTML('beforeend', renderServiceCard(s)));
+
+                // Update tab totals
+                const tabJobs = document.getElementById('tab-jobs-count');
+                if (tabJobs) tabJobs.textContent = (jobs.length||0).toString();
+                const tabServices = document.getElementById('tab-services-count');
+                if (tabServices) tabServices.textContent = (services.length||0).toString();
+
+                // Compute per-category worker counts from services
+                const cats = ['Construction','Plumbing','Electrical','Carpentry','Painting','Cleaning'];
+                const counts = Object.fromEntries(cats.map(c=>[c,0]));
+                const norm = (v)=>{
+                    const s = String(v||'');
+                    return s.replace(/^[^A-Za-z0-9]+\s*/, '').trim();
+                };
+                services.forEach(s=>{
+                    const c = norm(s.category);
+                    if (counts[c] !== undefined) counts[c]++;
+                });
+                cats.forEach(c=>{
+                    const el = document.getElementById('cat-' + c);
+                    if (el) el.textContent = counts[c] || 0;
+                });
+            }catch(e){ /* ignore */ }
+        }
+
+        function isOwner(owner){
+            const me = (window.currentUser||'').toLowerCase();
+            return me && owner && me === String(owner).toLowerCase();
+        }
+
+        function escapeHtml(str){
+            return String(str||'').replace(/[&<>"]+/g, s=>({
+                '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'
+            })[s]||s);
+        }
+
+        function timeAgo(date){
+            const diff = Math.floor((Date.now()-date.getTime())/1000);
+            if(diff<60) return diff+"s ago";
+            const m=Math.floor(diff/60); if(m<60) return m+" min ago";
+            const h=Math.floor(m/60); return h+" hr ago";
+        }
+
+        function renderJobCard(j){
+            const owner = j.ownerUsername;
+            const canHelp = !isOwner(owner);
+            return `
+            <div class="card" data-type="job" data-id="${j._id}">
+                <div class="card-header">
+                    <div class="category-badge ${escapeHtml(j.urgency||'urgency-medium')}"> ${escapeHtml(j.category||'')} </div>
+                    <div class="time-posted">${timeAgo(new Date(j.createdAt||Date.now()))}</div>
                 </div>
-            `;
-            
-            document.querySelector('.content-grid').insertAdjacentHTML('afterbegin', workerCard);
-            closeModal('servicesModal');
-            
-            // Update worker count in tab
-            const workerTab = document.querySelector('.tab-btn.inactive');
-            if (workerTab) {
-                const currentCount = parseInt(workerTab.textContent.match(/\d+/)[0]);
-                workerTab.textContent = `Available Workers (${currentCount + 1})`;
+                <h3 class="job-title">${escapeHtml(j.title||'')}</h3>
+                <p style="margin: 0.5rem 0; color: #cbd5e1;">${escapeHtml(j.description||'')}</p>
+                <div class="card-info">
+                    <div class="info-item"><span>👤</span><span>${escapeHtml(j.employer||'')}</span></div>
+                    <div class="info-item"><span>📍</span><span>${escapeHtml(j.location||'')}</span></div>
+                    <div class="info-item"><span>⏱️</span><span>${escapeHtml(j.duration||'')}</span></div>
+                    <div class="info-item"><span>💰</span><span>₹${Number(j.budget||0)}</span></div>
+                </div>
+                <div class="card-actions">
+                    ${canHelp ? `<button class="btn btn-primary btn-small" onclick="helpJob('${j._id}')">I Can Help</button>` : ''}
+                    <button class="btn btn-outline btn-small" onclick="viewJobDetails('${j._id}')">View Details</button>
+                    ${isOwner(owner) ? `<button class="btn btn-outline btn-small" onclick="deleteJob('${j._id}')">Delete</button>` : ''}
+                </div>
+            </div>`;
+        }
+
+        function renderServiceCard(s){
+            const owner = s.ownerUsername;
+            const canHelp = !isOwner(owner);
+            const skills = Array.isArray(s.skills)? s.skills.join(', ') : '';
+            return `
+            <div class="card" data-type="service" data-id="${s._id}">
+                <div class="card-header">
+                    <div class="category-badge urgency-medium"> ${escapeHtml(s.category||'')} </div>
+                    <div class="time-posted">${timeAgo(new Date(s.createdAt||Date.now()))}</div>
+                </div>
+                <h3 class="worker-name">${escapeHtml(s.workerName||'')}</h3>
+                <div class="card-info">
+                    <div class="info-item"><span>📍</span><span>${escapeHtml(s.location||'')}</span></div>
+                    <div class="info-item"><span>🛠️</span><span>${escapeHtml(skills)}</span></div>
+                    <div class="info-item"><span>💼</span><span>${Number(s.experience||0)} yrs</span></div>
+                    <div class="info-item"><span>💰</span><span>₹${Number(s.rate||0)}/day</span></div>
+                </div>
+                <div class="card-actions">
+                    ${canHelp ? `<button class="btn btn-primary btn-small" onclick="helpService('${s._id}')">I Can Help</button>` : ''}
+                    <button class="btn btn-outline btn-small" onclick="viewServiceDetails('${s._id}')">View Details</button>
+                    ${isOwner(owner) ? `<button class="btn btn-outline btn-small" onclick="deleteService('${s._id}')">Delete</button>` : ''}
+                </div>
+            </div>`;
+        }
+
+        async function viewJobDetails(id){
+            try{
+                const res = await fetch('/skills/jobs/'+id, { credentials:'same-origin' });
+                if(!res.ok) return;
+                const data = await res.json();
+                const o = data.owner || {};
+                document.getElementById('detailsTitle').textContent = 'Job Details';
+                document.getElementById('detailsBody').innerHTML = `
+                    <div class="info-item"><span>👤</span><span>${escapeHtml(o.name||'')}</span></div>
+                    <div class="info-item"><span>📧</span><span>${escapeHtml(o.email||'')}</span></div>
+                    <div class="info-item"><span>📞</span><span>${escapeHtml(o.phone||'')}</span></div>
+                    <div class="info-item"><span>📝</span><span>${escapeHtml(o.bio||'')}</span></div>
+                    ${o.resume? `<div class="info-item"><span>📄</span><a href="${o.resume}" target="_blank">View Resume</a></div>`:''}
+                `;
+                openModal('detailsModal');
+            }catch(e){ /* ignore */ }
+        }
+
+        async function viewServiceDetails(id){
+            try{
+                const res = await fetch('/skills/services/'+id, { credentials:'same-origin' });
+                if(!res.ok) return;
+                const data = await res.json();
+                const o = data.owner || {};
+                document.getElementById('detailsTitle').textContent = 'Service Details';
+                const resumeLink = o.resume ? `<div class="info-item"><span>📄</span><a href="${o.resume}" target="_blank" download>Download Resume</a></div>` : '';
+                const exportBtn = `<div class="info-item"><button class="btn btn-outline btn-small" onclick="downloadVCard({name: '${(o.name||'').replace(/'/g,"&#39;")}', email: '${(o.email||'').replace(/'/g,"&#39;")}', phone: '${(o.phone||'').replace(/'/g,"&#39;")}', bio: '${(o.bio||'').replace(/'/g,"&#39;")}'})">Export vCard</button></div>`;
+                document.getElementById('detailsBody').innerHTML = `
+                    <div class="info-item"><span>👤</span><span>${escapeHtml(o.name||'')}</span></div>
+                    <div class="info-item"><span>📧</span><span>${escapeHtml(o.email||'')}</span></div>
+                    <div class="info-item"><span>📞</span><span>${escapeHtml(o.phone||'')}</span></div>
+                    <div class="info-item"><span>📝</span><span>${escapeHtml(o.bio||'')}</span></div>
+                    ${resumeLink}
+                    ${exportBtn}
+                `;
+                openModal('detailsModal');
+            }catch(e){ /* ignore */ }
+        }
+
+        async function helpJob(id){
+            const contact = prompt('Enter your contact (phone/email/other) to share with the poster:');
+            if(!contact) return;
+            try{
+                const res = await fetch('/skills/jobs/'+id+'/help', { method:'POST', headers:{'Content-Type':'application/json'}, credentials:'same-origin', body: JSON.stringify({ contact }) });
+                if(!res.ok){ const err = await res.json().catch(()=>({error:'Failed'})); alert(err.error||'Failed'); return; }
+                alert('Your contact has been shared. Thank you!');
+            }catch(e){ alert('Network error'); }
+        }
+
+        async function helpService(id){
+            const contact = prompt('Enter your contact (phone/email/other) to share with the poster:');
+            if(!contact) return;
+            try{
+                const res = await fetch('/skills/services/'+id+'/help', { method:'POST', headers:{'Content-Type':'application/json'}, credentials:'same-origin', body: JSON.stringify({ contact }) });
+                if(!res.ok){ const err = await res.json().catch(()=>({error:'Failed'})); alert(err.error||'Failed'); return; }
+                alert('Your contact has been shared. Thank you!');
+            }catch(e){ alert('Network error'); }
+        }
+
+        async function deleteJob(id){
+            if(!confirm('Delete this job post?')) return;
+            try{
+                const res = await fetch('/skills/jobs/'+id, { method:'DELETE', credentials:'same-origin' });
+                if(res.status===204){ const el=document.querySelector(`[data-type="job"][data-id="${id}"]`); if(el&&el.parentNode) el.parentNode.removeChild(el); }
+                else { const err = await res.json().catch(()=>({error:'Failed'})); alert(err.error||'Failed to delete'); }
+            }catch(e){ alert('Network error'); }
+        }
+
+        async function deleteService(id){
+            if(!confirm('Delete this service post?')) return;
+            try{
+                const res = await fetch('/skills/services/'+id, { method:'DELETE', credentials:'same-origin' });
+                if(res.status===204){ const el=document.querySelector(`[data-type="service"][data-id="${id}"]`); if(el&&el.parentNode) el.parentNode.removeChild(el); }
+                else { const err = await res.json().catch(()=>({error:'Failed'})); alert(err.error||'Failed to delete'); }
+            }catch(e){ alert('Network error'); }
+        }
+
+            // Show only matching job cards
+            const jobCards = document.querySelectorAll('.content-grid .card');
+            jobCards.forEach(card => {
+                const c = card.getAttribute('data-category') || '';
+                card.style.display = (c === category) ? '' : 'none';
+            });
+        }
+
+        // Handle Services Form Submission -> persist to backend, then reload
+        document.getElementById('servicesForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const payload = {
+                workerName: formData.get('workerName'),
+                category: formData.get('workerCategory'),
+                location: formData.get('workerLocation'),
+                experience: Number(formData.get('workerExperience')),
+                rate: Number(formData.get('workerRate')),
+                skills: String(formData.get('workerSkills')||'').split(',').map(s=>s.trim()).filter(Boolean),
+                description: formData.get('workerDescription')
+            };
+            try{
+                const res = await fetch('/skills/services', {
+                    method:'POST',
+                    headers:{ 'Content-Type':'application/json' },
+                    credentials:'same-origin',
+                    body: JSON.stringify(payload)
+                });
+                if(res.status === 401){
+                    alert('Please login to post your services.');
+                    window.location.href = '/login';
+                    return;
+                }
+                if(!res.ok){
+                    const err = await res.json().catch(()=>({error:'Failed to create'}));
+                    alert(err.error||'Failed to create');
+                    return;
+                }
+                closeModal('servicesModal');
+                await loadSkillsData();
+            }catch(err){
+                alert('Network error');
             }
         });
 
-        // Handle Job Request Form Submission
-        document.getElementById('jobForm').addEventListener('submit', function(e) {
+        // Handle Job Request Form Submission -> optional: persist, then reload
+        document.getElementById('jobForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             const formData = new FormData(e.target);
-            const requirements = formData.get('jobRequirements').split(',').map(req => req.trim());
-            
-            const jobCard = `
-                <div class="card">
-                    <div class="card-header">
-                        <div class="category-badge ${formData.get('jobUrgency')}">
-                            ${formData.get('jobCategory')}
-                        </div>
-                        <div class="time-posted">${generateTimeAgo()}</div>
-                    </div>
-                    <h3 class="job-title">${formData.get('jobTitle')}</h3>
-                    <p style="margin: 0.5rem 0; color: #cbd5e1;">${formData.get('jobDescription')}</p>
-                    
-                    <div class="card-info">
-                        <div class="info-item">
-                            <span>👤</span>
-                            <span>${formData.get('jobEmployer')}</span>
-                        </div>
-                        <div class="info-item">
-                            <span>📍</span>
-                            <span>${formData.get('jobLocation')}</span>
-                        </div>
-                        <div class="info-item">
-                            <span>⏱️</span>
-                            <span>${formData.get('jobDuration')}</span>
-                        </div>
-                        <div class="info-item">
-                            <span>💰</span>
-                            <span>₹${formData.get('jobBudget')}/day</span>
-                        </div>
-                    </div>
-
-                    <div class="skills">
-                        ${requirements.map(req => `<span class="skill-tag">${req}</span>`).join('')}
-                    </div>
-
-                    <div class="card-actions">
-                        <button class="btn btn-primary btn-small">I Can Help</button>
-                        <button class="btn btn-outline btn-small">View Details</button>
-                    </div>
-                </div>
-            `;
-            
-            document.querySelector('.content-grid').insertAdjacentHTML('afterbegin', jobCard);
-            closeModal('jobModal');
-            
-            // Update job request count in tab
-            const jobTab = document.querySelector('.tab-btn.active');
-            if (jobTab) {
-                const currentCount = parseInt(jobTab.textContent.match(/\d+/)[0]);
-                jobTab.textContent = `Need Worker (${currentCount + 1})`;
-            }
+            const payload = {
+                title: formData.get('jobTitle'),
+                category: formData.get('jobCategory'),
+                employer: formData.get('jobEmployer'),
+                location: formData.get('jobLocation'),
+                urgency: formData.get('jobUrgency'),
+                duration: formData.get('jobDuration'),
+                budget: Number(formData.get('jobBudget')),
+                requirements: String(formData.get('jobRequirements')||'').split(',').map(s=>s.trim()).filter(Boolean),
+                description: formData.get('jobDescription')
+            };
+            try{
+                const res = await fetch('/skills/jobs', {
+                    method:'POST', headers:{'Content-Type':'application/json'}, credentials:'same-origin', body: JSON.stringify(payload)
+                });
+                if(res.status===401){ alert('Please login to post a job request.'); window.location.href='/login'; return; }
+                if(!res.ok){ const err=await res.json().catch(()=>({error:'Failed to create'})); alert(err.error||'Failed to create'); return; }
+                closeModal('jobModal');
+                await loadSkillsData();
+            }catch(err){ alert('Network error'); }
         });
+
+        function downloadVCard({ name, email, phone, bio }){
+            const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:${name||''}\nEMAIL:${email||''}\nTEL:${phone||''}\nNOTE:${bio||''}\nEND:VCARD`;
+            const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'resume.vcf';
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(a.href);
+            a.remove();
+        }
 
         // Tab switching functionality
         document.addEventListener('DOMContentLoaded', function() {
